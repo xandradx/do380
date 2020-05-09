@@ -1,0 +1,81 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: configmap-session-resources
+parameters:
+- name: NAME_PREFIX
+  value: ""
+  required: false
+- name: WORKSHOP_NAME
+  value: ""
+  required: true
+- name: SPAWNER_NAMESPACE
+  value: ""
+  required: true
+- name: SPAWNER_MODE
+  value: "learning-portal"
+  required: true
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${NAME_PREFIX}${WORKSHOP_NAME}-session-resources
+    labels:
+      app: ${NAME_PREFIX}${WORKSHOP_NAME}
+      spawner: ${SPAWNER_MODE}
+      class: spawner
+  data:
+    extra_resources.yaml: |-
+      kind: List
+      apiVersion: v1
+      items:
+      - kind: ClusterRoleBinding
+        apiVersion: rbac.authorization.k8s.io/v1
+        metadata:
+          name: cluster-admin-${service_account}
+          labels:
+            app: ${application_name}-${spawner_namespace}
+            project: ${project_namespace}
+        subjects:
+        - kind: ServiceAccount
+          name: ${service_account}
+          namespace: ${spawner_namespace}
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: cluster-admin
+      - kind: SecurityContextConstraints
+        apiVersion: security.openshift.io/v1
+        metadata:
+          name: ${project_namespace}-containers
+          labels:
+            app: ${application_name}-${spawner_namespace}
+            project: ${project_namespace}
+        priority: 888
+        runAsUser:
+          type: MustRunAsRange
+        seLinuxContext:
+          type: MustRunAs
+        fsGroup:
+          type: MustRunAs
+        requiredDropCapabilities:
+        - KILL
+        - MKNOD
+        allowHostDirVolumePlugin: false
+        allowHostIPC: false
+        allowHostNetwork: false
+        allowHostPID: false
+        allowHostPorts: false
+        allowPrivilegeEscalation: true
+        allowPrivilegedContainer: true
+        allowedCapabilities: 
+        defaultAddCapabilities: 
+        users:
+        - system:serviceaccount:${spawner_namespace}:${service_account}
+        volumes:
+        - configMap
+        - downwardAPI
+        - emptyDir
+        - persistentVolumeClaim
+        - projected
+        - secret
