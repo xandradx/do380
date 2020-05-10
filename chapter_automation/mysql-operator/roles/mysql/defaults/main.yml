@@ -1,0 +1,20 @@
+# Discovered from CustomResource metadata
+name: "{{ meta.name | default('mysql') }}"
+namespace: "{{ meta.namespace | default('mysql') }}"
+
+# present - install
+# absent - uninstall
+state: present
+
+mysql_database: widgetfactory
+mysql_password: admin123
+mysql_user: admin
+
+# Database capacity
+volume_capacity: 1Gi
+
+memory_limit: 512Mi
+
+registry_url: docker-registry.default.svc:5000
+mysql_version: "5.7"
+image_namespace: openshift

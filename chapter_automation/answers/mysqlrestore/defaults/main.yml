@@ -1,0 +1,14 @@
+# Discovered from CustomResource metadata
+name: "{{ meta.name | default('mysqlbackup') }}"
+namespace: "{{ meta.namespace | default('mysql') }}"
+
+# Mysql image vars
+registry_url: docker-registry.default.svc:5000
+mysql_version: "5.7"
+image_namespace: openshift
+
+# Openshift service of the mysql deployment
+mysql_deployment: mysql
+
+# PVC containing the backup contents
+mysql_backup_pvc: mysqlbackup

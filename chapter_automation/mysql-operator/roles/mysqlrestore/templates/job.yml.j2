@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace }}
+  labels:
+    app: {{ name }}
+spec:
+  activeDeadlineSeconds: 18000
+  backoffLimit: 6
+  template:
+    metadata:
+      name: {{ name }}
+    spec:
+      containers:
+      - name: backup
+        image: {{ registry_url }}/{{ image_namespace }}/mysql:{{ mysql_version }}
+        env:
+        - name: ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: database_root_password
+              name: {{ mysql_deployment }}
+        - name: DATABASE_NAME
+          valueFrom:
+            secretKeyRef:
+              key: database_name
+              name: {{ mysql_deployment }}
+        command: ["/bin/bash", "-c"]
+        # TODO: Add container args for restore
+        volumeMounts:
+        - mountPath: /var/backup
+          name: backup
+      restartPolicy: Never
+      volumes:
+      - name: backup
+        persistentVolumeClaim:
+          claimName: {{ mysql_backup_pvc }}

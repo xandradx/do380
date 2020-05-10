@@ -1,0 +1,25 @@
+- name: Demonstrate k8s modules
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  vars:
+    namespace: k8s-automation
+    ansible_python_interpreter: /usr/bin/python3.6 
+  module_defaults:
+    group/k8s:
+      namespace: "{{ namespace }}"
+  tasks:
+    - name: Create objects from the manifest
+      k8s:
+        state: present
+        src: "{{ playbook_dir + '/hello.yml' }}"
+
+
+    - name: Change from ClusterIP to NodePort
+      k8s_service:
+        state: present
+        name: nodejs-ex
+        type: NodePort
+        ports:
+          - port: 8080
+            protocol: TCP

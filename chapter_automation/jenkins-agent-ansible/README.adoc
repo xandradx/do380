@@ -1,0 +1,4 @@
+= `jenkins-agent-ansible`
+
+Jenkins slave with the addition of maven, ansible, and openshift clients for
+deploying the widgetfactory service

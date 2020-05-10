@@ -1,0 +1,6 @@
+- name: Create job for restore operation
+  k8s:
+    state: present
+    definition: "{{ lookup('template', item.name) | from_yaml }}"
+  loop:
+    - name: job.yml.j2

@@ -1,0 +1,48 @@
+---
+- name: Provision client VMs
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  vars_files:
+    - vars/aws.yml
+  tasks:
+    - name: Set cloudformation state to {{ state }}
+      cloudformation:
+        stack_name: "{{ city }}vms"
+        state: "{{ state }}"
+        template_body: "{{ lookup('template', 'cloudformation.j2') }}"
+
+    - name: Remove VMs from known_hosts if state==absent
+      known_hosts:
+        name: "{{ city }}vm{{ item }}.{{ subdomain_base }}"
+        state: absent
+      loop: "{{ range(1, (num_instances | int) + 1) | list }}"
+      when: state == "absent"
+
+    - name: Create new resource group based on new ec2 instances
+      block:
+        - name: Get ec2 facts
+          ec2_instance_facts:
+            filters:
+              instance-state-name:
+                - running
+              "tag:City": "{{ city }}"
+          register: ec2_facts
+
+        - name: Add ec2 instances to the resource group "ec2_hosts"
+          add_host:
+            name: "{{ item.public_ip_address }}"
+            group: ec2_hosts
+            ansible_connection: ssh
+            ansible_user: centos
+            ansible_ssh_private_key_file: "$HOME/Ansible/BetterTogether.pem"
+          loop: "{{ ec2_facts.instances }}"
+      when: state == "present"
+
+    - name: Pause for 90 seconds while the ec2 instance(s) become(s) SSH ready
+      pause:
+        seconds: 90
+      when: state == "present"
+
+- name: Install required tooling on client vms
+  import_playbook: ./install-software.yml
