@@ -4,7 +4,7 @@
   connection: local
   vars:
     namespace: k8s-automation
-    ansible_python_interpreter: /usr/bin/python3.6 
+    #ansible_python_interpreter: /usr/bin/python3.6 
   module_defaults:
     group/k8s:
       namespace: "{{ namespace }}"
