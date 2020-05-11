@@ -1,0 +1,8 @@
+apiVersion: better.together.io/v1alpha1
+kind: ManagedNamespace
+metadata:
+  name: example-medium
+spec:
+  # Add fields here
+  size: medium
+  namespaceName: example-medium
