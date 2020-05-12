@@ -1,0 +1,23 @@
+apiVersion: template.openshift.io/v1          
+kind: Template
+objects:
+  - apiVersion: v1          
+    kind: ConfigMap
+    metadata:
+      name: prometheus-demo
+      namespace: pad-monitoring
+    data:     
+      prometheus.yml: |     
+        global:                   
+          external_labels:
+            monitor: prometheus
+        scrape_configs:
+          - job_name: 'prometheus'
+            static_configs:
+              - targets: ['localhost:9090'] 
+                labels:
+                  group: 'prometheus'
+              - targets: ['YOUR_APP_ROUTE'] 
+                labels:
+                  group: 'pad'
+                  app: 'http-simulator'
