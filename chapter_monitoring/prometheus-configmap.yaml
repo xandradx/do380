@@ -25,5 +25,5 @@ objects:
           - rules.yaml
       rules.yaml: |
         groups:
-          - name: test
+          - name: prod
             rules:
