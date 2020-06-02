@@ -41,13 +41,13 @@ parameters:
 - name: APPLICATION_NAMESPACE
   required: true
 - name: APPLICATION_SOURCE_REPOSITORY_URL
-  value: https://github.com/rh-openshift-ansible-better-together/dev-track.git
+  value: https://github.com/ocp4labs/do380.git
 - name: SOURCE_REF
   value: master
 - name: DATABASE_HOST
   required: true
 - name: APPLICATION_CONTEXT_DIR
-  value: widget-factory
+  value: chapter_automation/widget-factory
 - name: PIPELINE_SCRIPT
   value: Jenkinsfile
 - name: REGISTRY_URL
