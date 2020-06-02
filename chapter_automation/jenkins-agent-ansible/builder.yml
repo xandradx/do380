@@ -59,11 +59,11 @@ parameters:
 - name: APPLICATION_NAMESPACE
   value: widgetfactory
 - name: SOURCE_REPOSITORY_URL
-  value: https://github.com/rh-openshift-ansible-better-together/dev-track.git
+  value: https://github.com/ocp4labs/do380.git
 - name: SOURCE_REF
   required: true
 - name: SOURCE_CONTEXT_DIR
-  value: jenkins-agent-ansible
+  value: chapter_automation/jenkins-agent-ansible
 - name: BUILDER_IMAGE_NAME
   value: registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7
 - name: IMAGE_TAG
