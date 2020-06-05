@@ -51,7 +51,7 @@ objects:
           labels:
             app: ${application_name}-${spawner_namespace}
             project: ${project_namespace}
-        priority: 888
+        priority: 8
         runAsUser:
           type: MustRunAsRange
         seLinuxContext:
